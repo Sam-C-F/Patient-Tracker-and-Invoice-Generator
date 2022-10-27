@@ -24,5 +24,39 @@ describe("/api/patients", () => {
         );
       });
     });
+    it("200: returns search if patient exists", async () => {
+      const { body } = await request(app)
+        .get("/api/patients?search=Rooney")
+        .expect(200);
+      expect(body.patients).to.eql([
+        {
+          patient_name: "Mr Wayne Rooney",
+          dob: "16-08-1990",
+          patient_id: 10,
+          reference: "99887766",
+          solicitor: "Clyde & Co",
+        },
+      ]);
+    });
+    it("200: returns search if part of patient patient_name exists", async () => {
+      const { body } = await request(app)
+        .get("/api/patients?search=ney")
+        .expect(200);
+      expect(body.patients).to.eql([
+        {
+          patient_name: "Mr Wayne Rooney",
+          dob: "16-08-1990",
+          patient_id: 10,
+          reference: "99887766",
+          solicitor: "Clyde & Co",
+        },
+      ]);
+    });
+    it("404: returns an error if the patient does not exist", async () => {
+      const { body } = await request(app)
+        .get("/api/patients?search=xyz")
+        .expect(404);
+      expect(body.msg).to.eql("Patient not found.");
+    });
   });
 });

@@ -10,11 +10,15 @@ export type Patient = {
   location: string;
 };
 
-export const getPatients: express.RequestHandler<{
-  patients: Patient[];
-}> = async (req, res, next) => {
+export const getPatients: express.RequestHandler<
+  {},
+  { patients: Patient[] },
+  {},
+  { search: string }
+> = async (req, res, next) => {
   try {
-    const patients = await fetchPatients();
+    const { search } = req.query;
+    const patients = await fetchPatients(search);
     res.status(200).send({ patients });
   } catch (err) {
     next(err);
