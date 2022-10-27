@@ -3,7 +3,7 @@ import express from "express";
 export const internalServerError: express.ErrorRequestHandler<
   {},
   { msg: string }
-> = (err, req, res) => {
+> = (err, req, res, next) => {
   if (err) {
     console.log(err);
   }

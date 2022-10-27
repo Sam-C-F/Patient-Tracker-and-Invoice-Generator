@@ -10,11 +10,9 @@ export type Patient = {
   location: string;
 };
 
-export const getPatients: express.RequestHandler<
-  {},
-  { patients: Patient[] },
-  {}
-> = async (req, res, next) => {
+export const getPatients: express.RequestHandler<{
+  patients: Patient[];
+}> = async (req, res, next) => {
   try {
     const patients = await fetchPatients();
     res.status(200).send({ patients });
