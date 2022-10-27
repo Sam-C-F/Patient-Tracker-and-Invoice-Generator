@@ -80,5 +80,31 @@ describe("/api/patients", () => {
         location: "Manchester",
       });
     });
+    it("400: wrong data type entered", async () => {
+      const testPatient = {
+        patient_name: "Mr Alpha Omega",
+        dob: "1900-01-01",
+        reference: "88888888",
+        solicitor_id: "seven",
+      };
+      const { body } = await request(app)
+        .post("/api/patients")
+        .send(testPatient)
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+    it("400: empty data field", async () => {
+      const testPatient = {
+        patient_name: "Mr Alpha Omega",
+        dob: "1900-01-01",
+        reference: "",
+        solicitor_id: "seven",
+      };
+      const { body } = await request(app)
+        .post("/api/patients")
+        .send(testPatient)
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
   });
 });
