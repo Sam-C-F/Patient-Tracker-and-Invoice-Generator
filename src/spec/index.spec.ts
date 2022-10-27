@@ -59,4 +59,26 @@ describe("/api/patients", () => {
       expect(body.msg).to.eql("Patient not found.");
     });
   });
+  describe("POST", () => {
+    it("201: responds with the posted patient", async () => {
+      const testPatient = {
+        patient_name: "Mr Alpha Omega",
+        dob: "1900-01-01",
+        reference: "88888888",
+        solicitor_id: 1,
+      };
+      const { body } = await request(app)
+        .post("/api/patients")
+        .send(testPatient)
+        .expect(201);
+      expect(body.patient).to.eql({
+        patient_id: 11,
+        reference: "88888888",
+        patient_name: "Mr Alpha Omega",
+        dob: "01-01-1900",
+        solicitor: "Keoghs",
+        location: "Manchester",
+      });
+    });
+  });
 });

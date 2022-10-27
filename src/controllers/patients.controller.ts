@@ -1,6 +1,6 @@
 import express from "express";
 
-import { fetchPatients } from "../models/patients.model";
+import { addPatient, fetchPatients } from "../models/patients.model";
 
 export type Patient = {
   reference: string;
@@ -20,6 +20,31 @@ export const getPatients: express.RequestHandler<
     const { search } = req.query;
     const patients = await fetchPatients(search);
     res.status(200).send({ patients });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const postPatient: express.RequestHandler<
+  {},
+  { patient: Patient },
+  {
+    reference: string;
+    patient_name: string;
+    dob: string;
+    solicitor_id: number;
+  },
+  {}
+> = async (req, res, next) => {
+  try {
+    const { reference, patient_name, dob, solicitor_id } = req.body;
+    const patient = await addPatient(
+      reference,
+      patient_name,
+      dob,
+      solicitor_id
+    );
+    res.status(201).send({ patient });
   } catch (err) {
     next(err);
   }
