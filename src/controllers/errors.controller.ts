@@ -1,6 +1,20 @@
 import express from "express";
 import { NextFunction } from "express";
 
+export const PSQLErrors: express.ErrorRequestHandler<{}, { msg: string }> = (
+  err,
+  req,
+  res,
+  next
+) => {
+  const errorCodes = ["22P02"];
+  if (errorCodes.includes(err.code)) {
+    res.status(400).send({ msg: "bad request" });
+  } else {
+    next(err);
+  }
+};
+
 export const badRequestErrors: express.ErrorRequestHandler<
   {},
   { msg: string }
