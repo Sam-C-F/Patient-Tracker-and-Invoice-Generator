@@ -209,3 +209,26 @@ describe("/api/solicitors", () => {
     });
   });
 });
+
+describe("/api/invoices", () => {
+  describe("GET", () => {
+    it("200: responds with an array of all invoices", async () => {
+      const { body } = await request(app).get("/api/invoices").expect(200);
+      assert.isArray(body.invoices);
+      expect(body.invoices).to.have.length.greaterThan(0);
+      body.invoices.forEach((invoice: {}) => {
+        expect(invoice).to.include.all.keys(
+          "reference",
+          "patient_name",
+          "invoice_number",
+          "date",
+          "description",
+          "hours_worked",
+          "hourly_rate",
+          "solicitor_name",
+          "address"
+        );
+      });
+    });
+  });
+});
