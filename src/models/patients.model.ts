@@ -5,7 +5,7 @@ import db from "../db/index";
 export const fetchPatients: (search: string) => Promise<Patient[]> = async (
   search
 ) => {
-  let queryString = `SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD-MM-YYYY') AS dob, reference, solicitors.name AS solicitor
+  let queryString = `SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD/MM/YYYY') AS dob, reference, solicitors.name AS solicitor
   FROM reports JOIN solicitors
   ON reports.solicitor_id = solicitors.solicitor_id`;
   const queryValues = [];
@@ -41,7 +41,7 @@ export const addPatient: (
     [reference, name, dob, solicitor_id]
   );
   const { rows } = await db.query(`
-  SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD-MM-YYYY') AS dob, reference, solicitors.name AS solicitor, location
+  SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD/MM/YYYY') AS dob, reference, solicitors.name AS solicitor, location
   FROM reports JOIN solicitors
   ON reports.solicitor_id = solicitors.solicitor_id
   WHERE reports.patient_id = ${insertPatient.rows[0].patient_id};
@@ -64,7 +64,7 @@ export const fetchPatientById: (
   }
   const { rows } = await db.query(
     `
-  SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD-MM-YYYY') AS dob, reference, solicitors.name AS solicitor
+  SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD/MM/YYYY') AS dob, reference, solicitors.name AS solicitor
   FROM reports JOIN solicitors
   ON reports.solicitor_id = solicitors.solicitor_id
   WHERE patient_id = $1;
