@@ -309,4 +309,37 @@ describe("/api/invoices", () => {
       expect(body.msg).to.eql("bad request");
     });
   });
+  describe("GET api/invoices/patient/:patient_id", () => {
+    it("returns only the invoices relating to the associated patient_id", async () => {
+      const { body } = await request(app)
+        .get("/api/invoices/patient/7")
+        .expect(200);
+      expect(body.invoices).to.have.length(3);
+      body.invoices.forEach((invoice: {}) => {
+        expect(invoice).to.include.all.keys(
+          "reference",
+          "patient_name",
+          "invoice_number",
+          "date",
+          "description",
+          "hours_worked",
+          "hourly_rate",
+          "solicitor_name",
+          "address"
+        );
+      });
+    });
+    it("404: id number not found", async () => {
+      const { body } = await request(app)
+        .get("/api/invoices/patient/30")
+        .expect(404);
+      expect(body.msg).to.eql("not found");
+    });
+    it("400: id number invalid", async () => {
+      const { body } = await request(app)
+        .get("/api/invoices/patient/invalid")
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+  });
 });
