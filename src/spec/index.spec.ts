@@ -130,3 +130,16 @@ describe("/api/patients", () => {
     });
   });
 });
+
+describe("/api/solicitors", () => {
+  describe("GET", () => {
+    it("200: responds with an array of solicitors, their address, and location", async () => {
+      const { body } = await request(app).get("/api/solicitors").expect(200);
+      assert.isArray(body.solicitors);
+      expect(body.solicitors).to.have.length.greaterThan(0);
+      body.solicitors.forEach((solicitor: {}) => {
+        expect(solicitor).to.include.keys("name", "location", "address");
+      });
+    });
+  });
+});

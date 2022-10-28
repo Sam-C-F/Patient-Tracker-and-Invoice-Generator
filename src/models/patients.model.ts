@@ -1,5 +1,3 @@
-import { response } from "express";
-import { string } from "pg-format";
 import { Patient } from "../controllers/patients.controller";
 
 import db from "../db/index";
