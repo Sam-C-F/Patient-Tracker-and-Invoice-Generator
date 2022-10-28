@@ -31,7 +31,7 @@ describe("/api/patients", () => {
       expect(body.patients).to.eql([
         {
           patient_name: "Mr Wayne Rooney",
-          dob: "16-08-1990",
+          dob: "16/08/1990",
           patient_id: 10,
           reference: "99887766",
           solicitor: "Clyde & Co",
@@ -45,7 +45,7 @@ describe("/api/patients", () => {
       expect(body.patients).to.eql([
         {
           patient_name: "Mr Wayne Rooney",
-          dob: "16-08-1990",
+          dob: "16/08/1990",
           patient_id: 10,
           reference: "99887766",
           solicitor: "Clyde & Co",
@@ -63,7 +63,7 @@ describe("/api/patients", () => {
     it("201: responds with the posted patient", async () => {
       const testPatient = {
         patient_name: "Mr Alpha Omega",
-        dob: "1900-01-01",
+        dob: "1900/01/01",
         reference: "88888888",
         solicitor_id: 1,
       };
@@ -75,7 +75,7 @@ describe("/api/patients", () => {
         patient_id: 11,
         reference: "88888888",
         patient_name: "Mr Alpha Omega",
-        dob: "01-01-1900",
+        dob: "01/01/1900",
         solicitor: "Keoghs",
         location: "Manchester",
       });
@@ -83,7 +83,7 @@ describe("/api/patients", () => {
     it("400: wrong data type entered", async () => {
       const testPatient = {
         patient_name: "Mr Alpha Omega",
-        dob: "1900-01-01",
+        dob: "1900/01/01",
         reference: "88888888",
         solicitor_id: "seven",
       };
@@ -96,7 +96,7 @@ describe("/api/patients", () => {
     it("400: empty data field", async () => {
       const testPatient = {
         patient_name: "Mr Alpha Omega",
-        dob: "1900-01-01",
+        dob: "1900/01/01",
         reference: "",
         solicitor_id: "seven",
       };
@@ -113,7 +113,7 @@ describe("/api/patients", () => {
       expect(body.patient).to.eql({
         patient_id: 2,
         patient_name: "Mr Leo Caprio",
-        dob: "12-05-1968",
+        dob: "12/05/1968",
         reference: "ABC12345",
         solicitor: "Kennedys",
       });
@@ -229,6 +229,58 @@ describe("/api/invoices", () => {
           "address"
         );
       });
+    });
+  });
+  describe("POST", () => {
+    it("201: responds with the posted invoice", async () => {
+      const testInvoice = {
+        description: "To the Completion of a Report",
+        hours_worked: 8,
+        hourly_rate: 250,
+        patient_id: 1,
+      };
+      const { body } = await request(app)
+        .post("/api/invoices")
+        .send(testInvoice)
+        .expect(201);
+      expect(body.invoice).to.eql({
+        invoice_number: 7,
+        description: "To the Completion of a Report",
+        hours_worked: 8,
+        hourly_rate: 250,
+        date: new Date().toLocaleDateString("en-GB"),
+        reference: "1111111",
+        patient_name: "Mr John Doe",
+        solicitor_name: "Clyde & Co",
+        address:
+          "Clyde & Co, Royal Exchange Building, St Ann's Square, Manchester, M2 7EF",
+      });
+    });
+    it("400: wrong data type entered", async () => {
+      const testInvoice = {
+        description: "To the Completion of a Report",
+        hours_worked: 8,
+        hourly_rate: 250,
+        patient_id: "one",
+      };
+      const { body } = await request(app)
+        .post("/api/invoices")
+        .send(testInvoice)
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+    it("400: empty data field", async () => {
+      const testInvoice = {
+        description: "",
+        hours_worked: 8,
+        hourly_rate: 250,
+        patient_id: 1,
+      };
+      const { body } = await request(app)
+        .post("/api/invoices")
+        .send(testInvoice)
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
     });
   });
 });
