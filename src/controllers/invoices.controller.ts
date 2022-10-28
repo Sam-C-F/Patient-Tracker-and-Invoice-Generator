@@ -3,6 +3,7 @@ import {
   addInvoice,
   fetchInvoiceByInvoiceId,
   fetchInvoices,
+  fetchInvoicesByPatientId,
 } from "../models/invoices.model";
 
 export type Invoice = {
@@ -65,6 +66,20 @@ export const getInvoiceByInvoiceId: express.RequestHandler<
     const { invoice_number } = req.params;
     const invoice = await fetchInvoiceByInvoiceId(invoice_number);
     res.status(200).send({ invoice });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getInvoicesByPatientId: express.RequestHandler<
+  { patient_id: number },
+  {},
+  { invoices: Invoice[] },
+  {}
+> = async (req, res, next) => {
+  try {
+    const invoices = await fetchInvoicesByPatientId(req.params.patient_id);
+    res.status(200).send({ invoices });
   } catch (err) {
     next(err);
   }

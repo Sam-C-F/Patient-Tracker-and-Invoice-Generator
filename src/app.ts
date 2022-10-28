@@ -7,6 +7,7 @@ import {
 import {
   getInvoiceByInvoiceId,
   getInvoices,
+  getInvoicesByPatientId,
   postInvoice,
 } from "./controllers/invoices.controller";
 import {
@@ -34,6 +35,7 @@ app.get("/api/solicitors/:solicitor_id", getSolicitorById);
 app.get("/api/invoices", getInvoices);
 app.post("/api/invoices", postInvoice);
 app.get("/api/invoices/:invoice_number", getInvoiceByInvoiceId);
+app.get("/api/invoices/patient/:patient_id", getInvoicesByPatientId);
 
 app.use(PSQLErrors);
 

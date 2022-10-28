@@ -75,3 +75,22 @@ SELECT reference, reports.patient_name, invoice_number, TO_CHAR(created_at, 'DD/
   }
   return rows[0];
 };
+
+export const fetchInvoicesByPatientId: (
+  patient_id: number
+) => Promise<Invoice[]> = async (patient_id) => {
+  const { rows } = await db.query(
+    `
+  SELECT reference, reports.patient_name, invoice_number, TO_CHAR(created_at, 'DD/MM/YYYY') AS date, description, hours_worked, hourly_rate, name AS solicitor_name, address
+  FROM reports JOIN invoices
+  ON invoices.patient_id = reports.patient_id
+  JOIN solicitors ON reports.solicitor_id = solicitors.solicitor_id
+  WHERE reports.patient_id = $1;
+  `,
+    [patient_id]
+  );
+  if (!rows[0]) {
+    return Promise.reject({ status: 404, msg: "not found" });
+  }
+  return rows;
+};
