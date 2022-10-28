@@ -5,6 +5,8 @@ import {
   fetchPatientById,
   fetchPatients,
 } from "../models/patients.model";
+import { addSolicitor } from "../models/solicitors.model";
+import { Solicitor } from "./solicitors.controller";
 
 export type Patient = {
   reference: string;
@@ -64,6 +66,21 @@ export const getPatientById: express.RequestHandler<
     const { patient_id } = req.params;
     const patient = await fetchPatientById(patient_id);
     res.status(200).send({ patient });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const postSolicitors: express.RequestHandler<
+  {},
+  { solicitor: Solicitor },
+  { name: string; location: string; address: string },
+  {}
+> = async (req, res, next) => {
+  try {
+    const { name, location, address } = req.body;
+    const solicitor = await addSolicitor(name, location, address);
+    res.status(201).send({ solicitor });
   } catch (err) {
     next(err);
   }
