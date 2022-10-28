@@ -4,10 +4,12 @@ import {
   internalServerError,
   PSQLErrors,
 } from "./controllers/errors.controller";
-
-import apiRouter from "./routers/api.router";
+import cors from "cors";
 
 const app = express();
+app.use(cors());
+
+import apiRouter from "./routers/api.router";
 
 app.use(express.json());
 
