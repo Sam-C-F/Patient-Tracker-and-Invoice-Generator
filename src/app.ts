@@ -10,6 +10,7 @@ import {
   postPatient,
 } from "./controllers/patients.controller";
 import {
+  getSolicitorById,
   getSolicitors,
   postSolicitors,
 } from "./controllers/solicitors.controller";
@@ -23,6 +24,7 @@ app.get("/api/patients/:patient_id", getPatientById);
 
 app.get("/api/solicitors", getSolicitors);
 app.post("/api/solicitors", postSolicitors);
+app.get("/api/solicitors/:solicitor_id", getSolicitorById);
 
 app.use(PSQLErrors);
 

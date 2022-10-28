@@ -185,4 +185,27 @@ describe("/api/solicitors", () => {
       expect(body.msg).to.eql("bad request");
     });
   });
+  describe("GET api/solicitors/:solicitor_id", () => {
+    it("200: responds with the solicitor", async () => {
+      const { body } = await request(app).get("/api/solicitors/2").expect(200);
+      expect(body.solicitor).to.eql({
+        solicitor_id: 2,
+        name: "Keoghs",
+        location: "Bolton",
+        address: "Keoghs LLP, 2 The Parklands, Lostock, Manchester BL6 4SE",
+      });
+    });
+    it("404: id number not found", async () => {
+      const { body } = await request(app)
+        .get("/api/solicitors/100")
+        .expect(404);
+      expect(body.msg).to.eql("not found");
+    });
+    it("400: id number invalid", async () => {
+      const { body } = await request(app)
+        .get("/api/solicitors/invalid")
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+  });
 });
