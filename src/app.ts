@@ -4,7 +4,11 @@ import {
   internalServerError,
   PSQLErrors,
 } from "./controllers/errors.controller";
-import { getInvoices, postInvoice } from "./controllers/invoices.controller";
+import {
+  getInvoiceByInvoiceId,
+  getInvoices,
+  postInvoice,
+} from "./controllers/invoices.controller";
 import {
   getPatientById,
   getPatients,
@@ -29,6 +33,7 @@ app.get("/api/solicitors/:solicitor_id", getSolicitorById);
 
 app.get("/api/invoices", getInvoices);
 app.post("/api/invoices", postInvoice);
+app.get("/api/invoices/:invoice_number", getInvoiceByInvoiceId);
 
 app.use(PSQLErrors);
 
