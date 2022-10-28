@@ -8,9 +8,11 @@ import {
   getPatientById,
   getPatients,
   postPatient,
-  postSolicitors,
 } from "./controllers/patients.controller";
-import { getSolicitors } from "./controllers/solicitors.controller";
+import {
+  getSolicitors,
+  postSolicitors,
+} from "./controllers/solicitors.controller";
 
 const app = express();
 app.use(express.json());
