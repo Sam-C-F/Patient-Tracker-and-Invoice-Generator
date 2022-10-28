@@ -4,38 +4,14 @@ import {
   internalServerError,
   PSQLErrors,
 } from "./controllers/errors.controller";
-import {
-  getInvoiceByInvoiceId,
-  getInvoices,
-  getInvoicesByPatientId,
-  postInvoice,
-} from "./controllers/invoices.controller";
-import {
-  getPatientById,
-  getPatients,
-  postPatient,
-} from "./controllers/patients.controller";
-import {
-  getSolicitorById,
-  getSolicitors,
-  postSolicitors,
-} from "./controllers/solicitors.controller";
+
+import apiRouter from "./routers/api.router";
 
 const app = express();
+
 app.use(express.json());
 
-app.get("/api/patients", getPatients);
-app.post("/api/patients", postPatient);
-app.get("/api/patients/:patient_id", getPatientById);
-
-app.get("/api/solicitors", getSolicitors);
-app.post("/api/solicitors", postSolicitors);
-app.get("/api/solicitors/:solicitor_id", getSolicitorById);
-
-app.get("/api/invoices", getInvoices);
-app.post("/api/invoices", postInvoice);
-app.get("/api/invoices/:invoice_number", getInvoiceByInvoiceId);
-app.get("/api/invoices/patient/:patient_id", getInvoicesByPatientId);
+app.use("/api", apiRouter);
 
 app.use(PSQLErrors);
 
