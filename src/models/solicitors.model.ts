@@ -36,3 +36,19 @@ export const addSolicitor: (
   );
   return rows[0];
 };
+
+export const fetchSolicitorById: (
+  solicitor_id: number
+) => Promise<Solicitor> = async (solicitor_id) => {
+  const { rows } = await db.query(
+    `
+  SELECT * FROM solicitors
+  WHERE solicitor_id = $1;
+  `,
+    [solicitor_id]
+  );
+  if (!rows[0]) {
+    return Promise.reject({ status: 404, msg: "not found" });
+  }
+  return rows[0];
+};

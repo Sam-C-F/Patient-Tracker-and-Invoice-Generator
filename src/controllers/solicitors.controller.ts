@@ -1,5 +1,9 @@
 import express from "express";
-import { addSolicitor, fetchSolicitors } from "../models/solicitors.model";
+import {
+  addSolicitor,
+  fetchSolicitorById,
+  fetchSolicitors,
+} from "../models/solicitors.model";
 
 export type Solicitor = {
   name: string;
@@ -30,6 +34,21 @@ export const postSolicitors: express.RequestHandler<
     const { name, location, address } = req.body;
     const solicitor = await addSolicitor(name, location, address);
     res.status(201).send({ solicitor });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getSolicitorById: express.RequestHandler<
+  { solicitor_id: number },
+  {},
+  { solicitor: Solicitor },
+  {}
+> = async (req, res, next) => {
+  try {
+    const { solicitor_id } = req.params;
+    const solicitor = await fetchSolicitorById(solicitor_id);
+    res.status(200).send({ solicitor });
   } catch (err) {
     next(err);
   }
