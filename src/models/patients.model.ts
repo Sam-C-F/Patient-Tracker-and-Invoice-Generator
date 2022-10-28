@@ -4,7 +4,7 @@ import { Patient } from "../controllers/patients.controller";
 
 import db from "../db/index";
 
-export const fetchPatients: (search: string) => Promise<Patient[]> = (
+export const fetchPatients: (search: string) => Promise<Patient[]> = async (
   search
 ) => {
   let queryString = `SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD-MM-YYYY') AS dob, reference, solicitors.name AS solicitor
@@ -16,15 +16,14 @@ export const fetchPatients: (search: string) => Promise<Patient[]> = (
     queryString += ` WHERE LOWER(reports.patient_name) LIKE $1`;
     queryValues.push(`%${search}%`);
   }
-  return db
-    .query(queryString, queryValues)
-    .then(({ rows }: { rows: Patient[] }) => {
-      if (!rows[0]) {
-        return Promise.reject({ status: 404, msg: "Patient not found." });
-      } else {
-        return rows;
-      }
-    });
+
+  const { rows } = await db.query(queryString, queryValues);
+
+  if (!rows[0]) {
+    return Promise.reject({ status: 404, msg: "Patient not found." });
+  } else {
+    return rows;
+  }
 };
 
 export const addPatient: (
@@ -49,5 +48,30 @@ export const addPatient: (
   ON reports.solicitor_id = solicitors.solicitor_id
   WHERE reports.patient_id = ${insertPatient.rows[0].patient_id};
     `);
+  return rows[0];
+};
+
+export const fetchPatientById: (
+  patient_id: number
+) => Promise<Patient> = async (patient_id) => {
+  const checkPatientId = await db.query(
+    `
+  SELECT patient_id FROM reports
+  WHERE patient_id = $1;
+  `,
+    [patient_id]
+  );
+  if (!checkPatientId.rows[0]) {
+    return Promise.reject({ status: 404, msg: "not found" });
+  }
+  const { rows } = await db.query(
+    `
+  SELECT patient_id, reports.patient_name, TO_CHAR(dob, 'DD-MM-YYYY') AS dob, reference, solicitors.name AS solicitor
+  FROM reports JOIN solicitors
+  ON reports.solicitor_id = solicitors.solicitor_id
+  WHERE patient_id = $1;
+  `,
+    [patient_id]
+  );
   return rows[0];
 };
