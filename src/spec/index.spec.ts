@@ -142,4 +142,47 @@ describe("/api/solicitors", () => {
       });
     });
   });
+  describe("POST", () => {
+    it("201: responds with the posted solicitor", async () => {
+      const testSolicitor = {
+        name: "Test LLP",
+        location: "Oxford",
+        address: "Test Street, Test, Testshire, TE5 T39",
+      };
+      const { body } = await request(app)
+        .post("/api/solicitors")
+        .send(testSolicitor)
+        .expect(201);
+      expect(body.solicitor).to.eql({
+        solicitor_id: 6,
+        name: "Test LLP",
+        location: "Oxford",
+        address: "Test Street, Test, Testshire, TE5 T39",
+      });
+    });
+    it("400: wrong data type entered", async () => {
+      const testSolicitor = {
+        name: "Test LLP",
+        location: 18,
+        address: "Test Street, Test, Testshire, TE5 T39",
+      };
+      const { body } = await request(app)
+        .post("/api/solicitors")
+        .send(testSolicitor)
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+    it("400: empty data field", async () => {
+      const testSolicitor = {
+        name: "Test LLP",
+        location: "Oxford",
+        address: "",
+      };
+      const { body } = await request(app)
+        .post("/api/solicitors")
+        .send(testSolicitor)
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+  });
 });
