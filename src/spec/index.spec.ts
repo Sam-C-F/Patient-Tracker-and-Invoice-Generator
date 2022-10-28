@@ -107,4 +107,26 @@ describe("/api/patients", () => {
       expect(body.msg).to.eql("bad request");
     });
   });
+  describe("GET api/patients/:patient_id", () => {
+    it("200: responds with the patient, their dob, associated reference, and the solicitor", async () => {
+      const { body } = await request(app).get("/api/patients/2").expect(200);
+      expect(body.patient).to.eql({
+        patient_id: 2,
+        patient_name: "Mr Leo Caprio",
+        dob: "12-05-1968",
+        reference: "ABC12345",
+        solicitor: "Kennedys",
+      });
+    });
+    it("404: id number not found", async () => {
+      const { body } = await request(app).get("/api/patients/100").expect(404);
+      expect(body.msg).to.eql("not found");
+    });
+    it("400: id number invalid", async () => {
+      const { body } = await request(app)
+        .get("/api/patients/invalid")
+        .expect(400);
+      expect(body.msg).to.eql("bad request");
+    });
+  });
 });
