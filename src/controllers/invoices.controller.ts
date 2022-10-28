@@ -1,5 +1,9 @@
 import express from "express";
-import { addInvoice, fetchInvoices } from "../models/invoices.model";
+import {
+  addInvoice,
+  fetchInvoiceByInvoiceId,
+  fetchInvoices,
+} from "../models/invoices.model";
 
 export type Invoice = {
   reference: string;
@@ -46,6 +50,21 @@ export const postInvoice: express.RequestHandler<
       patient_id
     );
     res.status(201).send({ invoice });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getInvoiceByInvoiceId: express.RequestHandler<
+  { invoice_number: number },
+  {},
+  { invoice: Invoice },
+  {}
+> = async (req, res, next) => {
+  try {
+    const { invoice_number } = req.params;
+    const invoice = await fetchInvoiceByInvoiceId(invoice_number);
+    res.status(200).send({ invoice });
   } catch (err) {
     next(err);
   }
