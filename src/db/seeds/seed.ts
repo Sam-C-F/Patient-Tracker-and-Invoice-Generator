@@ -45,7 +45,7 @@ const seed = async (data: SeedData) => {
         (invoice_number SERIAL PRIMARY KEY,
         created_at TIMESTAMP DEFAULT NOW(),
         description VARCHAR NOT NULL,
-        hours_worked INT NOT NULL,
+        hours_worked FLOAT NOT NULL,
         hourly_rate FLOAT NOT NULL,
         patient_id INT REFERENCES reports(patient_id))
       `);
